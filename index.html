@@ -164,12 +164,16 @@ document.addEventListener('DOMContentLoaded', () => {
           text: txt
         });
 
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
-        modal.hide();
+        // hide modal ข้อความ
+        const textModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
+        textModal.hide();
       };
       container.appendChild(p);
     });
-    new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
+
+    // show modal ข้อความ
+    const textModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
+    textModal.show();
   }
 
   function createMatrix(matrixEl) {
@@ -198,11 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
             divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
             divImg.onclick = () => {
               currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
+
+              // hide modal รูปก่อนเปิด modal ข้อความ
+              const imageModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
+              imageModal.hide();
+
               showTextSelector();
             };
             container.appendChild(divImg);
           });
-          new bootstrap.Modal(document.getElementById('imageSelectorModal')).show();
+
+          const imageModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
+          imageModal.show();
         });
 
         matrixEl.appendChild(div);
@@ -229,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.matrix').forEach(createMatrix);
 });
 </script>
+
 
 </body>
 </html>
