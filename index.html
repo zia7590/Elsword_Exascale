@@ -4,13 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Elsword_Exascale</title>
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: black;
-      color: white;
-    }
+    body { background-color: black; color: white; }
     .matrix {
       display: grid;
       grid-template-columns: repeat(4, 40px);
@@ -28,158 +24,181 @@
       background-position: center;
       background-repeat: no-repeat;
       cursor: pointer;
-      position: relative;
-    }
-    .cell-text {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      color: yellow;
-      font-size: 10px;
-      text-align: center;
-      background: rgba(0,0,0,0.5);
     }
   </style>
 </head>
 <body class="p-4">
 
-  <div class="container mb-4">
-    <br><br><br><br> 
-  </div>
+<div class="container mb-4">
+  <div class="row text-center">
 
-  <div class="container mb-4">
-    <div class="row text-center">
+    <!-- ตาราง 1 -->
+    <div class="col">
+      <p>Top Piece -> Damage Con 3 sec</p>
+      <div class="matrix">
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-4"></div>
 
-      <!-- ตารางแรก -->
-      <div class="col">
-        <p>Top Piece -> Damage Con 3 sec</p>
-        <div class="matrix" id="matrix1">
-          <!-- ช่อง Null.png ทั้งหมด -->
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div style="background-image: url('./Image/Equipment/Base/Base_Top_Piece.png');"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-4"></div>
 
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-4"></div>
 
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');"></div>
-          <div style="background-image: url('./Image/Equipment/Base/Base_Top_Piece.png');"></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Modal เลือกภาพ -->
-  <div class="modal fade" id="imageSelectorModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content bg-dark text-white">
-        <div class="modal-header">
-          <h5 class="modal-title">เลือกภาพ</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-flex flex-wrap" id="imageSelector"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-3"></div>
+        <div style="background-image: url('./Image/Equipment/Base/Base_Top_Piece.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
       </div>
     </div>
-  </div>
+	
+	<!-- ตาราง 2 -->
+    <div class="col">
+      <p>Bottom Piece -> Polarize</p>
+      <div class="matrix">
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-4"></div>
 
-  <!-- Modal เลือกข้อความ -->
-  <div class="modal fade" id="textSelectorModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content bg-dark text-white">
-        <div class="modal-header">
-          <h5 class="modal-title">เลือกข้อความ</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="textSelector"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-4"></div>
+
+        <div style="background-image: url('./Image/Equipment/Base/Base_Bottom_Piece.png');" data-bs-toggle="tooltip" title="ช่อง 4-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
       </div>
     </div>
+	
+	<!-- ตาราง 3 -->
+    <div class="col">
+      <p>Gloves -> All Skill Damage</p>
+      <div class="matrix">
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-3"></div>
+        <div style="background-image: url('./Image/Equipment/Base/Base_Golve.png');" data-bs-toggle="tooltip" title="ช่อง 1-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
+      </div>
+    </div>
+	
+	<!-- ตาราง 4 -->
+    <div class="col">
+      <p>Shoes -> Damage to Boss</p>
+      <div class="matrix">
+        <div style="background-image: url('./Image/Equipment/Base/Base_Shoes.png');" data-bs-toggle="tooltip" title="ช่อง 1-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 1-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 2-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 3-4"></div>
+
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-1"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-2"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-3"></div>
+        <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
+      </div>
+    </div>
+
+
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const baseImages = [
-      'Null.png',
-      'Base_Top_Piece.png',
-      'Base_Bottom_Piece.png',
-      'Base_Glove.png',
-      'Base_Shoes.png'
-    ];
+<!-- Modal เลือกข้อความ -->
+<div class="modal fade" id="textSelectorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">เลือกข้อความ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="textSelector"></div>
+    </div>
+  </div>
+</div>
 
-    const texts = [
-      "พลังโจมตี + 0.5%",
-      "พลังโจมตี + 0.6%",
-      "พลังโจมตี + 0.7%",
-      "พลังป้องกัน + 0.1%",
-      "พลังป้องกัน + 0.2%",
-      "พลังป้องกัน + 0.3%"
-    ];
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const texts = [
+  "พลังโจมตี + 0.5%",
+  "พลังโจมตี + 0.6%",
+  "พลังโจมตี + 0.7%",
+  "พลังป้องกัน + 0.1%",
+  "พลังป้องกัน + 0.2%",
+  "พลังป้องกัน + 0.3%"
+];
 
-    let currentCell = null;
+let currentCell = null;
 
-    // เปิด modal เลือกรูป
-    document.querySelectorAll('.clickable').forEach(cell => {
-      cell.addEventListener('click', () => {
-        currentCell = cell;
-        const container = document.getElementById('imageSelector');
-        container.innerHTML = '';
-        baseImages.forEach(img => {
-          const imageElem = document.createElement('img');
-          imageElem.src = './Image/Equipment/Base/' + img;
-          imageElem.style.width = '60px';
-          imageElem.style.height = '60px';
-          imageElem.style.margin = '5px';
-          imageElem.style.cursor = 'pointer';
-          imageElem.onclick = () => {
-            currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
-            const modal = bootstrap.Modal.getInstance(document.getElementById('imageSelectorModal'));
-            modal.hide();
-            openTextSelector();
-          };
-          container.appendChild(imageElem);
-        });
-        new bootstrap.Modal(document.getElementById('imageSelectorModal')).show();
-      });
+// คลิกที่ช่อง Null.png เพื่อเลือกข้อความ
+document.querySelectorAll('.clickable').forEach(cell => {
+  cell.addEventListener('click', () => {
+    currentCell = cell;
+    const container = document.getElementById('textSelector');
+    container.innerHTML = '';
+    texts.forEach(txt => {
+      const p = document.createElement('p');
+      p.textContent = txt;
+      p.style.cursor = 'pointer';
+      p.style.padding = '5px';
+      p.style.borderBottom = '1px solid white';
+      p.onclick = () => {
+        // แทน tooltip ของ cell
+        currentCell.setAttribute('title', txt);
+        // รีเฟรช tooltip
+        const tooltip = bootstrap.Tooltip.getInstance(currentCell);
+        if (tooltip) tooltip.dispose();
+        new bootstrap.Tooltip(currentCell);
+        const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
+        modal.hide();
+      };
+      container.appendChild(p);
     });
+    new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
+  });
+});
 
-    // เปิด modal เลือกข้อความ
-    function openTextSelector() {
-      const container = document.getElementById('textSelector');
-      container.innerHTML = '';
-      texts.forEach(txt => {
-        const p = document.createElement('p');
-        p.textContent = txt;
-        p.style.cursor = 'pointer';
-        p.style.padding = '5px';
-        p.style.borderBottom = '1px solid white';
-        p.onclick = () => {
-          // เพิ่ม div สำหรับข้อความลงใน cell
-          let textDiv = currentCell.querySelector('.cell-text');
-          if (!textDiv) {
-            textDiv = document.createElement('div');
-            textDiv.classList.add('cell-text');
-            currentCell.appendChild(textDiv);
-          }
-          textDiv.textContent = txt;
-          const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
-          modal.hide();
-        };
-        container.appendChild(p);
-      });
-      new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
-    }
-  </script>
+// เปิด tooltip ทั้งหมด
+document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+  new bootstrap.Tooltip(el);
+});
+</script>
 
 </body>
 </html>
