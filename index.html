@@ -158,37 +158,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tooltipInstance) tooltipInstance.dispose();
         tooltipInstance = new bootstrap.Tooltip(currentCell, { title: txt });
 
-        // save to Firebase
         set(ref(db, `matrices/${matrixId}/${cellId}`), {
           image: currentCell.style.backgroundImage,
           text: txt
         });
 
-        // hide modal ข้อความ
-        const textModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
-        textModal.hide();
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
+        modal.hide();
       };
       container.appendChild(p);
     });
-
-    // show modal ข้อความ
-    const textModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
-    textModal.show();
+    new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
   }
 
   function createMatrix(matrixEl) {
     const matrixId = matrixEl.dataset.matrix;
     matrixEl.innerHTML = '';
 
+    // สร้าง cell ทุกช่อง
     for (let r = 1; r <= 4; r++) {
       for (let c = 1; c <= 4; c++) {
         const cellId = `r${r}c${c}`;
         const div = document.createElement('div');
         div.classList.add('clickable');
         div.dataset.cellId = cellId;
-
-        const img = defaultCells[matrixId]?.[cellId] || "Null.png";
-        div.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
+        div.style.backgroundImage = `url('./Image/Equipment/Base/${defaultCells[matrixId]?.[cellId] || 'Null.png'}')`;
         div.setAttribute('title', `ช่อง ${r}-${c}`);
         new bootstrap.Tooltip(div);
 
@@ -202,25 +196,18 @@ document.addEventListener('DOMContentLoaded', () => {
             divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
             divImg.onclick = () => {
               currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
-
-              // hide modal รูปก่อนเปิด modal ข้อความ
-              const imageModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
-              imageModal.hide();
-
               showTextSelector();
             };
             container.appendChild(divImg);
           });
-
-          const imageModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
-          imageModal.show();
+          new bootstrap.Modal(document.getElementById('imageSelectorModal')).show();
         });
 
         matrixEl.appendChild(div);
       }
     }
 
-    // Load Firebase data
+    // โหลดค่า Firebase หลังสร้าง cell
     onValue(ref(db, `matrices/${matrixId}`), snapshot => {
       const data = snapshot.val();
       if (!data) return;
@@ -228,10 +215,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const cellId = cell.dataset.cellId;
         if (data[cellId]) {
           cell.style.backgroundImage = data[cellId].image;
-          cell.setAttribute('title', data[cellId].text);
+          cell.setAttribute('title', data[cellId].text || `ช่อง ${cellId}`);
           let tooltipInstance = bootstrap.Tooltip.getInstance(cell);
           if (tooltipInstance) tooltipInstance.dispose();
-          new bootstrap.Tooltip(cell, { title: data[cellId].text });
+          new bootstrap.Tooltip(cell, { title: data[cellId].text || `ช่อง ${cellId}` });
         }
       });
     });
@@ -240,7 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.matrix').forEach(createMatrix);
 });
 </script>
-
 
 </body>
 </html>
