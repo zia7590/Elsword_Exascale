@@ -25,6 +25,15 @@
       background-repeat: no-repeat;
       cursor: pointer;
     }
+    .image-option {
+      width: 60px;
+      height: 60px;
+      margin: 5px;
+      border: 1px solid white;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body class="p-4">
@@ -57,8 +66,8 @@
         <div style="background-image: url('./Image/Equipment/Base/Base_Top_Piece.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
       </div>
     </div>
-	
-	<!-- ตาราง 2 -->
+
+    <!-- ตาราง 2 -->
     <div class="col">
       <p>Bottom Piece -> Polarize</p>
       <div class="matrix">
@@ -83,8 +92,8 @@
         <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
       </div>
     </div>
-	
-	<!-- ตาราง 3 -->
+
+    <!-- ตาราง 3 -->
     <div class="col">
       <p>Gloves -> All Skill Damage</p>
       <div class="matrix">
@@ -109,8 +118,8 @@
         <div class="clickable" style="background-image: url('./Image/Equipment/Base/Null.png');" data-bs-toggle="tooltip" title="ช่อง 4-4"></div>
       </div>
     </div>
-	
-	<!-- ตาราง 4 -->
+
+    <!-- ตาราง 4 -->
     <div class="col">
       <p>Shoes -> Damage to Boss</p>
       <div class="matrix">
@@ -136,7 +145,19 @@
       </div>
     </div>
 
+  </div>
+</div>
 
+<!-- Modal เลือกรูป -->
+<div class="modal fade" id="imageSelectorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">เลือกภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body d-flex flex-wrap" id="imageSelector"></div>
+    </div>
   </div>
 </div>
 
@@ -164,41 +185,25 @@ const texts = [
   "พลังป้องกัน + 0.3%"
 ];
 
+const images = [
+  "Null.png",
+  "Base_Top_Piece.png",
+  "Base_Bottom_Piece.png",
+  "Base_Golve.png",
+  "Base_Shoes.png"
+];
+
 let currentCell = null;
 
-// คลิกที่ช่อง Null.png เพื่อเลือกข้อความ
+// คลิกช่อง Null.png
 document.querySelectorAll('.clickable').forEach(cell => {
   cell.addEventListener('click', () => {
     currentCell = cell;
-    const container = document.getElementById('textSelector');
+    const container = document.getElementById('imageSelector');
     container.innerHTML = '';
-    texts.forEach(txt => {
-      const p = document.createElement('p');
-      p.textContent = txt;
-      p.style.cursor = 'pointer';
-      p.style.padding = '5px';
-      p.style.borderBottom = '1px solid white';
-      p.onclick = () => {
-        // แทน tooltip ของ cell
-        currentCell.setAttribute('title', txt);
-        // รีเฟรช tooltip
-        const tooltip = bootstrap.Tooltip.getInstance(currentCell);
-        if (tooltip) tooltip.dispose();
-        new bootstrap.Tooltip(currentCell);
-        const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
-        modal.hide();
-      };
-      container.appendChild(p);
-    });
-    new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
-  });
-});
-
-// เปิด tooltip ทั้งหมด
-document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-  new bootstrap.Tooltip(el);
-});
-</script>
-
-</body>
-</html>
+    images.forEach(img => {
+      const div = document.createElement('div');
+      div.classList.add('image-option');
+      div.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
+      div.onclick = () => {
+        currentCell.style.backgroundImage = `
