@@ -216,10 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // เปลี่ยน title ของ cell
         currentCell.setAttribute('title', txt);
 
-        // รีเฟรช tooltip
-        const tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
+        // รีเฟรช tooltip ให้แสดงข้อความใหม่
+        let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
         if (tooltipInstance) tooltipInstance.dispose();
-        new bootstrap.Tooltip(currentCell);
+        tooltipInstance = new bootstrap.Tooltip(currentCell, { title: txt });
 
         // ปิด modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
@@ -260,4 +260,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
