@@ -40,7 +40,6 @@
 
 <div class="container mb-4">
   <div class="row text-center">
-
     <div class="col">
       <p>Top Piece -> Damage Con 3 sec</p>
       <div class="matrix" data-matrix="matrix1"></div>
@@ -57,7 +56,6 @@
       <p>Shoes -> Damage to Boss</p>
       <div class="matrix" data-matrix="matrix4"></div>
     </div>
-
   </div>
 </div>
 
@@ -145,14 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const cellId = currentCell.dataset.cellId;
         const matrixId = currentCell.closest('.matrix').dataset.matrix;
 
+        const bgFile = currentCell.dataset.bgfile; // ใช้ชื่อไฟล์เก็บแทน background-image
         currentCell.setAttribute('title', txt);
         let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
         if (tooltipInstance) tooltipInstance.dispose();
         new bootstrap.Tooltip(currentCell, { title: txt });
 
-        // save to Firebase
         set(ref(db, `matrices/${matrixId}/${cellId}`), {
-          image: currentCell.style.backgroundImage,
+          image: currentCell.dataset.bgfile, // เซฟชื่อไฟล์
           text: txt
         });
 
@@ -167,21 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const matrixId = matrixEl.dataset.matrix;
     matrixEl.innerHTML = '';
 
-    // สร้าง 4x4 grid
     for (let r = 1; r <= 4; r++) {
       for (let c = 1; c <= 4; c++) {
         const cellId = `r${r}c${c}`;
         const div = document.createElement('div');
         div.classList.add('clickable');
         div.dataset.cellId = cellId;
+        div.style.width = "40px";
+        div.style.height = "40px";
 
-        // Default image
-        const defaultImg = defaultCells[matrixId]?.[cellId] || "Null.png";
-        div.style.backgroundImage = `url('./Image/Equipment/Base/${defaultImg}')`;
+        const imgFile = defaultCells[matrixId]?.[cellId] || "Null.png";
+        div.style.backgroundImage = `url('./Image/Equipment/Base/${imgFile}')`;
+        div.dataset.bgfile = imgFile; // เก็บชื่อไฟล์ใน dataset
         div.setAttribute('title', `ช่อง ${r}-${c}`);
         new bootstrap.Tooltip(div);
 
-        // Event click
         div.addEventListener('click', () => {
           currentCell = div;
           const container = document.getElementById('imageSelector');
@@ -191,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             divImg.classList.add('image-option');
             divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
             divImg.onclick = () => {
+              currentCell.dataset.bgfile = imgName; // update dataset
               currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
               imageModal.hide();
               showTextSelector();
@@ -204,23 +203,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // โหลดข้อมูล Firebase ทั้ง matrix
     onValue(ref(db, `matrices/${matrixId}`), snapshot => {
-      const data = snapshot.val() || {};
+      const data = snapshot.val();
+      if (!data) return;
       matrixEl.querySelectorAll('.clickable').forEach(cell => {
         const cellId = cell.dataset.cellId;
         if (data[cellId]) {
-          cell.style.backgroundImage = data[cellId].image;
-          cell.setAttribute('title', data[cellId].text || `ช่อง ${cellId}`);
-        } else {
-          // ถ้าไม่มีใน Firebase ให้ใช้ default
-          const defaultImg = defaultCells[matrixId]?.[cellId] || "Null.png";
-          cell.style.backgroundImage = `url('./Image/Equipment/Base/${defaultImg}')`;
-          cell.setAttribute('title', `ช่อง ${cellId}`);
+          const imgFile = data[cellId].image || "Null.png";
+          const txt = data[cellId].text || `ช่อง ${cellId}`;
+          cell.dataset.bgfile = imgFile;
+          cell.style.backgroundImage = `url('./Image/Equipment/Base/${imgFile}')`;
+          cell.setAttribute('title', txt);
+          let tooltipInstance = bootstrap.Tooltip.getInstance(cell);
+          if (tooltipInstance) tooltipInstance.dispose();
+          new bootstrap.Tooltip(cell, { title: txt });
         }
-        let tooltipInstance = bootstrap.Tooltip.getInstance(cell);
-        if (tooltipInstance) tooltipInstance.dispose();
-        new bootstrap.Tooltip(cell, { title: cell.getAttribute('title') });
       });
     });
   }
