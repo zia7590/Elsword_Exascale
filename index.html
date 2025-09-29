@@ -98,7 +98,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db = getDatabase(app, "https://elswordexascale-43b83-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
 document.addEventListener('DOMContentLoaded', () => {
   const texts = [
