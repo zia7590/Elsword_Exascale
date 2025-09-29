@@ -41,25 +41,18 @@
 <div class="container mb-4">
   <div class="row text-center">
 
-    <!-- ตาราง 1 -->
     <div class="col">
       <p>Top Piece -> Damage Con 3 sec</p>
       <div class="matrix" data-matrix="matrix1"></div>
     </div>
-
-    <!-- ตาราง 2 -->
     <div class="col">
       <p>Bottom Piece -> Polarize</p>
       <div class="matrix" data-matrix="matrix2"></div>
     </div>
-
-    <!-- ตาราง 3 -->
     <div class="col">
       <p>Gloves -> All Skill Damage</p>
       <div class="matrix" data-matrix="matrix3"></div>
     </div>
-
-    <!-- ตาราง 4 -->
     <div class="col">
       <p>Shoes -> Damage to Boss</p>
       <div class="matrix" data-matrix="matrix4"></div>
@@ -68,7 +61,6 @@
   </div>
 </div>
 
-<!-- Modal เลือกรูป -->
 <div class="modal fade" id="imageSelectorModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
@@ -81,7 +73,6 @@
   </div>
 </div>
 
-<!-- Modal เลือกข้อความ -->
 <div class="modal fade" id="textSelectorModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
@@ -95,7 +86,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
@@ -138,12 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   let currentCell = null;
-
-  const textModalEl = document.getElementById('textSelectorModal');
-  const textModal = bootstrap.Modal.getOrCreateInstance(textModalEl);
-
-  const imageModalEl = document.getElementById('imageSelectorModal');
-  const imageModal = bootstrap.Modal.getOrCreateInstance(imageModalEl);
+  const textModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
+  const imageModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
 
   function showTextSelector() {
     const container = document.getElementById('textSelector');
@@ -181,28 +167,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const matrixId = matrixEl.dataset.matrix;
     matrixEl.innerHTML = '';
 
+    // สร้าง 4x4 grid
     for (let r = 1; r <= 4; r++) {
       for (let c = 1; c <= 4; c++) {
         const cellId = `r${r}c${c}`;
         const div = document.createElement('div');
         div.classList.add('clickable');
         div.dataset.cellId = cellId;
-        div.style.width = "40px";
-        div.style.height = "40px";
 
-        // Load Firebase data first
-        onValue(ref(db, `matrices/${matrixId}/${cellId}`), snapshot => {
-          const data = snapshot.val();
-          const imgUrl = data?.image 
-            ? data.image 
-            : `url('./Image/Equipment/Base/${defaultCells[matrixId]?.[cellId] || 'Null.png'}')`;
-          div.style.backgroundImage = imgUrl;
-          div.setAttribute('title', data?.text || `ช่อง ${r}-${c}`);
-          let tooltipInstance = bootstrap.Tooltip.getInstance(div);
-          if (tooltipInstance) tooltipInstance.dispose();
-          new bootstrap.Tooltip(div, { title: div.getAttribute('title') });
-        });
+        // Default image
+        const defaultImg = defaultCells[matrixId]?.[cellId] || "Null.png";
+        div.style.backgroundImage = `url('./Image/Equipment/Base/${defaultImg}')`;
+        div.setAttribute('title', `ช่อง ${r}-${c}`);
+        new bootstrap.Tooltip(div);
 
+        // Event click
         div.addEventListener('click', () => {
           currentCell = div;
           const container = document.getElementById('imageSelector');
@@ -224,6 +203,26 @@ document.addEventListener('DOMContentLoaded', () => {
         matrixEl.appendChild(div);
       }
     }
+
+    // โหลดข้อมูล Firebase ทั้ง matrix
+    onValue(ref(db, `matrices/${matrixId}`), snapshot => {
+      const data = snapshot.val() || {};
+      matrixEl.querySelectorAll('.clickable').forEach(cell => {
+        const cellId = cell.dataset.cellId;
+        if (data[cellId]) {
+          cell.style.backgroundImage = data[cellId].image;
+          cell.setAttribute('title', data[cellId].text || `ช่อง ${cellId}`);
+        } else {
+          // ถ้าไม่มีใน Firebase ให้ใช้ default
+          const defaultImg = defaultCells[matrixId]?.[cellId] || "Null.png";
+          cell.style.backgroundImage = `url('./Image/Equipment/Base/${defaultImg}')`;
+          cell.setAttribute('title', `ช่อง ${cellId}`);
+        }
+        let tooltipInstance = bootstrap.Tooltip.getInstance(cell);
+        if (tooltipInstance) tooltipInstance.dispose();
+        new bootstrap.Tooltip(cell, { title: cell.getAttribute('title') });
+      });
+    });
   }
 
   document.querySelectorAll('.matrix').forEach(createMatrix);
