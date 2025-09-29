@@ -139,6 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentCell = null;
 
+  // สร้าง instance ของ Modal แค่ครั้งเดียว
+  const imageModal = new bootstrap.Modal(document.getElementById('imageSelectorModal'));
+  const textModal = new bootstrap.Modal(document.getElementById('textSelectorModal'));
+
   function showTextSelector() {
     const container = document.getElementById('textSelector');
     container.innerHTML = '';
@@ -156,72 +160,66 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCell.setAttribute('title', txt);
         let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
         if (tooltipInstance) tooltipInstance.dispose();
-        tooltipInstance = new bootstrap.Tooltip(currentCell, { title: txt });
+        new bootstrap.Tooltip(currentCell, { title: txt });
 
+        // save to Firebase
         set(ref(db, `matrices/${matrixId}/${cellId}`), {
           image: currentCell.style.backgroundImage,
           text: txt
         });
 
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
-        modal.hide();
+        textModal.hide();
       };
       container.appendChild(p);
     });
-    new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
+    textModal.show();
   }
 
   function createMatrix(matrixEl) {
     const matrixId = matrixEl.dataset.matrix;
     matrixEl.innerHTML = '';
 
-    // สร้าง cell ทุกช่อง
-    for (let r = 1; r <= 4; r++) {
-      for (let c = 1; c <= 4; c++) {
-        const cellId = `r${r}c${c}`;
-        const div = document.createElement('div');
-        div.classList.add('clickable');
-        div.dataset.cellId = cellId;
-        div.style.backgroundImage = `url('./Image/Equipment/Base/${defaultCells[matrixId]?.[cellId] || 'Null.png'}')`;
-        div.setAttribute('title', `ช่อง ${r}-${c}`);
-        new bootstrap.Tooltip(div);
-
-        div.addEventListener('click', () => {
-          currentCell = div;
-          const container = document.getElementById('imageSelector');
-          container.innerHTML = '';
-          images.forEach(imgName => {
-            const divImg = document.createElement('div');
-            divImg.classList.add('image-option');
-            divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
-            divImg.onclick = () => {
-              currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
-              showTextSelector();
-            };
-            container.appendChild(divImg);
-          });
-          new bootstrap.Modal(document.getElementById('imageSelectorModal')).show();
-        });
-
-        matrixEl.appendChild(div);
-      }
-    }
-
-    // โหลดค่า Firebase หลังสร้าง cell
+    // โหลด Firebase data ก่อนสร้าง cell
     onValue(ref(db, `matrices/${matrixId}`), snapshot => {
-      const data = snapshot.val();
-      if (!data) return;
-      matrixEl.querySelectorAll('.clickable').forEach(cell => {
-        const cellId = cell.dataset.cellId;
-        if (data[cellId]) {
-          cell.style.backgroundImage = data[cellId].image;
-          cell.setAttribute('title', data[cellId].text || `ช่อง ${cellId}`);
-          let tooltipInstance = bootstrap.Tooltip.getInstance(cell);
-          if (tooltipInstance) tooltipInstance.dispose();
-          new bootstrap.Tooltip(cell, { title: data[cellId].text || `ช่อง ${cellId}` });
+      const data = snapshot.val() || {};
+
+      for (let r = 1; r <= 4; r++) {
+        for (let c = 1; c <= 4; c++) {
+          const cellId = `r${r}c${c}`;
+          const div = document.createElement('div');
+          div.classList.add('clickable');
+          div.dataset.cellId = cellId;
+
+          // ใช้ค่า Firebase ถ้ามี ถ้าไม่มีใช้ defaultCells ถ้าไม่มีอีก ใช้ Null.png
+          const img = data[cellId]?.image 
+                      || `url('./Image/Equipment/Base/${defaultCells[matrixId]?.[cellId] || 'Null.png'}')`;
+          div.style.backgroundImage = img.startsWith('url(') ? img : `url('./Image/Equipment/Base/${img}')`;
+
+          const title = data[cellId]?.text || `ช่อง ${r}-${c}`;
+          div.setAttribute('title', title);
+          new bootstrap.Tooltip(div);
+
+          div.addEventListener('click', () => {
+            currentCell = div;
+            const container = document.getElementById('imageSelector');
+            container.innerHTML = '';
+            images.forEach(imgName => {
+              const divImg = document.createElement('div');
+              divImg.classList.add('image-option');
+              divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
+              divImg.onclick = () => {
+                currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
+                showTextSelector();
+              };
+              container.appendChild(divImg);
+            });
+            imageModal.show();
+          });
+
+          matrixEl.appendChild(div);
         }
-      });
-    });
+      }
+    }, { onlyOnce: true }); // ใช้ once เพื่อสร้าง cell แค่ครั้งเดียว
   }
 
   document.querySelectorAll('.matrix').forEach(createMatrix);
