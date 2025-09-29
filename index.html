@@ -164,8 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
           text: txt
         });
 
-        const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
-        if (modal) modal.hide();
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
+        modal.hide();
       };
       container.appendChild(p);
     });
