@@ -139,6 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentCell = null;
 
+  const textModalEl = document.getElementById('textSelectorModal');
+  const textModal = bootstrap.Modal.getOrCreateInstance(textModalEl);
+
+  const imageModalEl = document.getElementById('imageSelectorModal');
+  const imageModal = bootstrap.Modal.getOrCreateInstance(imageModalEl);
+
   function showTextSelector() {
     const container = document.getElementById('textSelector');
     container.innerHTML = '';
@@ -156,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCell.setAttribute('title', txt);
         let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
         if (tooltipInstance) tooltipInstance.dispose();
-        tooltipInstance = new bootstrap.Tooltip(currentCell, { title: txt });
+        new bootstrap.Tooltip(currentCell, { title: txt });
 
         // save to Firebase
         set(ref(db, `matrices/${matrixId}/${cellId}`), {
@@ -164,13 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
           text: txt
         });
 
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
-        modal.hide();
+        textModal.hide(); // ปิด modal ผ่าน instance เดียว
       };
       container.appendChild(p);
     });
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
-    modal.show();
+    textModal.show(); // เปิด modal ผ่าน instance เดียว
   }
 
   function createMatrix(matrixEl) {
@@ -201,12 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
             divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
             divImg.onclick = () => {
               currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
+              imageModal.hide(); // ปิด modal เลือกรูปก่อนเปิดข้อความ
               showTextSelector();
             };
             container.appendChild(divImg);
           });
-          const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
-          modal.show();
+          imageModal.show();
         });
 
         matrixEl.appendChild(div);
@@ -233,6 +237,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.matrix').forEach(createMatrix);
 });
 </script>
-
 </body>
 </html>
