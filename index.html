@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentCell = null;
 
-  // เปิด tooltip ทุกตัว
+  // เปิด tooltip ทั้งหมดตอนเริ่ม
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
     new bootstrap.Tooltip(el);
   });
@@ -211,11 +211,19 @@ document.addEventListener('DOMContentLoaded', () => {
       p.style.padding = '5px';
       p.style.borderBottom = '1px solid white';
       p.onclick = () => {
+        if (!currentCell) return;
+
+        // เปลี่ยน title ของ cell
         currentCell.setAttribute('title', txt);
-        const tooltip = bootstrap.Tooltip.getInstance(currentCell);
-        if (tooltip) tooltip.dispose();
+
+        // รีเฟรช tooltip
+        const tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
+        if (tooltipInstance) tooltipInstance.dispose();
         new bootstrap.Tooltip(currentCell);
-        bootstrap.Modal.getInstance(document.getElementById('textSelectorModal')).hide();
+
+        // ปิด modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
+        if (modal) modal.hide();
       };
       container.appendChild(p);
     });
@@ -230,10 +238,19 @@ document.addEventListener('DOMContentLoaded', () => {
       images.forEach(img => {
         const div = document.createElement('div');
         div.classList.add('image-option');
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.backgroundSize = 'cover';
+        div.style.backgroundPosition = 'center';
+        div.style.display = 'inline-block';
+        div.style.margin = '5px';
+        div.style.cursor = 'pointer';
+        div.style.border = '1px solid white';
         div.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
         div.onclick = () => {
           currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
-          bootstrap.Modal.getInstance(document.getElementById('imageSelectorModal')).hide();
+          const imgModal = bootstrap.Modal.getInstance(document.getElementById('imageSelectorModal'));
+          if (imgModal) imgModal.hide();
           showTextSelector();
         };
         container.appendChild(div);
@@ -243,3 +260,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
