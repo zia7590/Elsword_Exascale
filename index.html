@@ -57,8 +57,28 @@
       <div class="matrix" data-matrix="matrix4"></div>
     </div>
   </div>
+
+  <div class="row text-center mt-4">
+    <div class="col">
+      <p>Accessory -> Some Stat</p>
+      <div class="matrix" data-matrix="matrix5"></div>
+    </div>
+    <div class="col">
+      <p>Helmet -> Some Stat</p>
+      <div class="matrix" data-matrix="matrix6"></div>
+    </div>
+    <div class="col">
+      <p>Cape -> Some Stat</p>
+      <div class="matrix" data-matrix="matrix7"></div>
+    </div>
+    <div class="col">
+      <p>Ring -> Some Stat</p>
+      <div class="matrix" data-matrix="matrix8"></div>
+    </div>
+  </div>
 </div>
 
+<!-- Modal เลือกรูป -->
 <div class="modal fade" id="imageSelectorModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
@@ -71,6 +91,7 @@
   </div>
 </div>
 
+<!-- Modal เลือกข้อความ -->
 <div class="modal fade" id="textSelectorModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
@@ -122,7 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
     matrix1: { "r4c4": "Base_Top_Piece.png" },
     matrix2: { "r4c1": "Base_Bottom_Piece.png" },
     matrix3: { "r1c4": "Base_Golve.png" },
-    matrix4: { "r1c1": "Base_Shoes.png" }
+    matrix4: { "r1c1": "Base_Shoes.png" },
+    matrix5: { "r1c1": "Null.png" },
+    matrix6: { "r1c1": "Null.png" },
+    matrix7: { "r1c1": "Null.png" },
+    matrix8: { "r1c1": "Null.png" }
   };
 
   let currentCell = null;
@@ -143,14 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const cellId = currentCell.dataset.cellId;
         const matrixId = currentCell.closest('.matrix').dataset.matrix;
 
-        const bgFile = currentCell.dataset.bgfile; // ใช้ชื่อไฟล์เก็บแทน background-image
         currentCell.setAttribute('title', txt);
         let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
         if (tooltipInstance) tooltipInstance.dispose();
         new bootstrap.Tooltip(currentCell, { title: txt });
 
         set(ref(db, `matrices/${matrixId}/${cellId}`), {
-          image: currentCell.dataset.bgfile, // เซฟชื่อไฟล์
+          image: currentCell.dataset.bgfile,
           text: txt
         });
 
@@ -176,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const imgFile = defaultCells[matrixId]?.[cellId] || "Null.png";
         div.style.backgroundImage = `url('./Image/Equipment/Base/${imgFile}')`;
-        div.dataset.bgfile = imgFile; // เก็บชื่อไฟล์ใน dataset
+        div.dataset.bgfile = imgFile;
         div.setAttribute('title', `ช่อง ${r}-${c}`);
         new bootstrap.Tooltip(div);
 
@@ -189,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             divImg.classList.add('image-option');
             divImg.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
             divImg.onclick = () => {
-              currentCell.dataset.bgfile = imgName; // update dataset
+              currentCell.dataset.bgfile = imgName;
               currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${imgName}')`;
               imageModal.hide();
               showTextSelector();
