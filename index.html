@@ -175,88 +175,133 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const texts = [
-    "พลังโจมตี + 0.5%",
-    "พลังโจมตี + 0.6%",
-    "พลังโจมตี + 0.7%",
-    "พลังป้องกัน + 0.1%",
-    "พลังป้องกัน + 0.2%",
-    "พลังป้องกัน + 0.3%"
-  ];
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-  const images = [
-    "Null.png",
-    "Base_Top_Piece.png",
-    "Base_Bottom_Piece.png",
-    "Base_Golve.png",
-    "Base_Shoes.png"
-  ];
+  const firebaseConfig = {
+    apiKey: "AIzaSyAH6snABBqDj9YQYqRfyZBMI7LD5S-r4fE",
+    authDomain: "elswordexascale-43b83.firebaseapp.com",
+    projectId: "elswordexascale-43b83",
+    storageBucket: "elswordexascale-43b83.appspot.com",
+    messagingSenderId: "726132978541",
+    appId: "1:726132978541:web:0567940cbd8e10ac5c2064"
+  };
 
-  let currentCell = null;
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-  // เปิด tooltip ทั้งหมดตอนเริ่ม
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-    new bootstrap.Tooltip(el);
-  });
+  document.addEventListener('DOMContentLoaded', () => {
+    const texts = [
+      "พลังโจมตี + 0.5%",
+      "พลังโจมตี + 0.6%",
+      "พลังโจมตี + 0.7%",
+      "พลังป้องกัน + 0.1%",
+      "พลังป้องกัน + 0.2%",
+      "พลังป้องกัน + 0.3%"
+    ];
 
-  function showTextSelector() {
-    const container = document.getElementById('textSelector');
-    container.innerHTML = '';
-    texts.forEach(txt => {
-      const p = document.createElement('p');
-      p.textContent = txt;
-      p.style.cursor = 'pointer';
-      p.style.padding = '5px';
-      p.style.borderBottom = '1px solid white';
-      p.onclick = () => {
-        if (!currentCell) return;
+    const images = [
+      "Null.png",
+      "Base_Top_Piece.png",
+      "Base_Bottom_Piece.png",
+      "Base_Golve.png",
+      "Base_Shoes.png"
+    ];
 
-        // เปลี่ยน title ของ cell
-        currentCell.setAttribute('title', txt);
+    let currentCell = null;
 
-        // รีเฟรช tooltip ให้แสดงข้อความใหม่
-        let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
-        if (tooltipInstance) tooltipInstance.dispose();
-        tooltipInstance = new bootstrap.Tooltip(currentCell, { title: txt });
-
-        // ปิด modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
-        if (modal) modal.hide();
-      };
-      container.appendChild(p);
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+      new bootstrap.Tooltip(el);
     });
-    new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
-  }
 
-  document.querySelectorAll('.clickable').forEach(cell => {
-    cell.addEventListener('click', () => {
-      currentCell = cell;
-      const container = document.getElementById('imageSelector');
+    function showTextSelector() {
+      const container = document.getElementById('textSelector');
       container.innerHTML = '';
-      images.forEach(img => {
-        const div = document.createElement('div');
-        div.classList.add('image-option');
-        div.style.width = '50px';
-        div.style.height = '50px';
-        div.style.backgroundSize = 'cover';
-        div.style.backgroundPosition = 'center';
-        div.style.display = 'inline-block';
-        div.style.margin = '5px';
-        div.style.cursor = 'pointer';
-        div.style.border = '1px solid white';
-        div.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
-        div.onclick = () => {
-          currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
-          const imgModal = bootstrap.Modal.getInstance(document.getElementById('imageSelectorModal'));
-          if (imgModal) imgModal.hide();
-          showTextSelector();
+      texts.forEach(txt => {
+        const p = document.createElement('p');
+        p.textContent = txt;
+        p.style.cursor = 'pointer';
+        p.style.padding = '5px';
+        p.style.borderBottom = '1px solid white';
+        p.onclick = () => {
+          if (!currentCell) return;
+          const cellId = currentCell.dataset.cellId;
+          const matrixId = currentCell.closest('.matrix').dataset.matrix;
+
+          currentCell.setAttribute('title', txt);
+          let tooltipInstance = bootstrap.Tooltip.getInstance(currentCell);
+          if (tooltipInstance) tooltipInstance.dispose();
+          tooltipInstance = new bootstrap.Tooltip(currentCell, { title: txt });
+
+          // save to Firebase
+          set(ref(db, `matrices/${matrixId}/${cellId}`), {
+            image: currentCell.style.backgroundImage,
+            text: txt
+          });
+
+          const modal = bootstrap.Modal.getInstance(document.getElementById('textSelectorModal'));
+          if (modal) modal.hide();
         };
-        container.appendChild(div);
+        container.appendChild(p);
       });
-      new bootstrap.Modal(document.getElementById('imageSelectorModal')).show();
+      new bootstrap.Modal(document.getElementById('textSelectorModal')).show();
+    }
+
+    function createMatrix(matrixEl) {
+      for (let r = 1; r <= 4; r++) {
+        for (let c = 1; c <= 4; c++) {
+          const div = document.createElement('div');
+          div.classList.add('clickable');
+          div.dataset.cellId = `r${r}c${c}`;
+          div.style.backgroundImage = `url('./Image/Equipment/Base/Null.png')`;
+          div.setAttribute('title', `ช่อง ${r}-${c}`);
+          new bootstrap.Tooltip(div);
+
+          div.addEventListener('click', () => {
+            currentCell = div;
+            const container = document.getElementById('imageSelector');
+            container.innerHTML = '';
+            images.forEach(img => {
+              const divImg = document.createElement('div');
+              divImg.classList.add('image-option');
+              divImg.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
+              divImg.onclick = () => {
+                currentCell.style.backgroundImage = `url('./Image/Equipment/Base/${img}')`;
+                showTextSelector();
+              };
+              container.appendChild(divImg);
+            });
+            new bootstrap.Modal(document.getElementById('imageSelectorModal')).show();
+          });
+
+          matrixEl.appendChild(div);
+        }
+      }
+    }
+
+    // สร้าง matrix ทั้งหมด
+    document.querySelectorAll('.matrix').forEach(matrixEl => {
+      createMatrix(matrixEl);
+
+      const matrixId = matrixEl.dataset.matrix;
+      onValue(ref(db, `matrices/${matrixId}`), snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
+        matrixEl.querySelectorAll('.clickable').forEach(cell => {
+          const cellId = cell.dataset.cellId;
+          if (data[cellId]) {
+            cell.style.backgroundImage = data[cellId].image;
+            cell.setAttribute('title', data[cellId].text);
+            let tooltipInstance = bootstrap.Tooltip.getInstance(cell);
+            if (tooltipInstance) tooltipInstance.dispose();
+            new bootstrap.Tooltip(cell, { title: data[cellId].text });
+          }
+        });
+      });
     });
   });
-});
 </script>
+</body>
+</html>
