@@ -24,20 +24,6 @@
       background-position: center;
       background-repeat: no-repeat;
       cursor: pointer;
-      position: relative;
-    }
-    .matrix div:hover::after {
-      content: "No Effect";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #000;
-      font-weight: bold;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 12px;
     }
     .image-option {
       width: 60px;
@@ -144,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     "พลังป้องกัน + 0.1%",
     "พลังป้องกัน + 0.2%",
     "พลังป้องกัน + 0.3%",
-    "No Effect" // เพิ่มตัวเลือก No Effect
+	"No Effect"
   ];
 
   const images = [
@@ -217,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgFile = defaultCells[matrixId]?.[cellId] || "Null.png";
         div.style.backgroundImage = `url('./Image/Equipment/Base/${imgFile}')`;
         div.dataset.bgfile = imgFile;
-        div.setAttribute('title', `ช่อง ${r}-${c}`);
+        div.setAttribute('title', `No Effect`);
         new bootstrap.Tooltip(div);
 
         div.addEventListener('click', () => {
