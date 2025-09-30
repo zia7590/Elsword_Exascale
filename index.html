@@ -43,38 +43,38 @@
   <div class="row text-center">
     <div class="col">
       <p>Top Piece -> Damage Con 3 sec</p>
-      <div class="matrix" data-matrix="matrix1"></div>
+      <div class="matrix" data-matrix="matrix1" data-type="top"></div>
     </div>
     <div class="col">
       <p>Bottom Piece -> Polarize</p>
-      <div class="matrix" data-matrix="matrix2"></div>
+      <div class="matrix" data-matrix="matrix2" data-type="bottom"></div>
     </div>
     <div class="col">
       <p>Gloves -> All Skill Damage</p>
-      <div class="matrix" data-matrix="matrix3"></div>
+      <div class="matrix" data-matrix="matrix3" data-type="gloves"></div>
     </div>
     <div class="col">
       <p>Shoes -> Damage to Boss</p>
-      <div class="matrix" data-matrix="matrix4"></div>
+      <div class="matrix" data-matrix="matrix4" data-type="shoes"></div>
     </div>
   </div>
 <br><br><br><br><br>
   <div class="row text-center mt-4">
     <div class="col">
       <p>Top Piece -> Reset Cd</p>
-      <div class="matrix" data-matrix="matrix5"></div>
+      <div class="matrix" data-matrix="matrix5" data-type="top"></div>
     </div>
     <div class="col">
       <p>Bottom Piece -> Polarize</p>
-      <div class="matrix" data-matrix="matrix6"></div>
+      <div class="matrix" data-matrix="matrix6" data-type="bottom"></div>
     </div>
     <div class="col">
       <p>Gloves -> All Skill Damage</p>
-      <div class="matrix" data-matrix="matrix7"></div>
+      <div class="matrix" data-matrix="matrix7" data-type="gloves"></div>
     </div>
     <div class="col">
       <p>Shoes -> Party Action Speed</p>
-      <div class="matrix" data-matrix="matrix8"></div>
+      <div class="matrix" data-matrix="matrix8" data-type="shoes"></div>
     </div>
   </div>
 </div>
@@ -123,42 +123,78 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app, "https://elswordexascale-43b83-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
 document.addEventListener('DOMContentLoaded', () => {
-  const texts = [
-    "พลังโจมตี + 0.5%",
-    "พลังโจมตี + 0.6%",
-    "พลังโจมตี + 0.7%",
-    "พลังป้องกัน + 0.1%",
-    "พลังป้องกัน + 0.2%",
-    "พลังป้องกัน + 0.3%",
-	"No Effect"
-  ];
+  // ✅ แยกข้อความตามประเภทชิ้นส่วน
+  const textsByType = {
+    top: [
+      "Damage Con 3 sec + 0.5%",
+      "Damage Con 3 sec + 0.6%",
+      "Damage Con 3 sec + 0.7%",
+      "Damage Con 3 sec + 0.8%",
+      "Damage Con 3 sec + 0.9%",
+      "Copy Circuit",
+      "No Effect"
+    ],
+    bottom: [
+      "Polarize + 0.5%",
+      "Polarize + 0.6%",
+      "Polarize + 0.7%",
+      "Polarize + 0.8%",
+      "Polarize + 0.9%",
+      "Copy Circuit",
+      "No Effect"
+    ],
+    gloves: [
+      "All Skill Damage + 0.5%",
+      "All Skill Damage + 0.6%",
+      "All Skill Damage + 0.7%",
+      "All Skill Damage + 0.8%",
+      "All Skill Damage + 0.9%",
+      "Copy Circuit",
+      "No Effect"
+    ],
+    shoes: [
+      "Damage to Boss + 0.5%",
+      "Damage to Boss + 0.6%",
+      "Damage to Boss + 0.7%",
+	  "Damage to Boss + 0.8%",
+	  "Damage to Boss + 0.9%",
+      "Party Action Speed + 0.3%",
+      "Party Action Speed + 0.4%",
+	  "Party Action Speed + 0.5%",
+	  "Party Action Speed + 0.6%",
+      "Copy Circuit",
+      "No Effect"
+    ]
+  };
 
   const images = [
     "Null.png",
     "Base_Top_Piece.png",
     "Base_Bottom_Piece.png",
-    "Base_Golve.png",
+    "Base_Glove.png",
     "Base_Shoes.png"
   ];
 
   const defaultCells = {
     matrix1: { "r4c4": "Base_Top_Piece.png" },
     matrix2: { "r4c1": "Base_Bottom_Piece.png" },
-    matrix3: { "r1c4": "Base_Golve.png" },
+    matrix3: { "r1c4": "Base_Glove.png" },
     matrix4: { "r1c1": "Base_Shoes.png" },
     matrix5: { "r4c4": "Base_Top_Piece.png" },
     matrix6: { "r4c1": "Base_Bottom_Piece.png" },
-    matrix7: { "r1c4": "Base_Golve.png" },
+    matrix7: { "r1c4": "Base_Glove.png" },
     matrix8: { "r1c1": "Base_Shoes.png" }
   };
 
   let currentCell = null;
+  let currentType = null;
   const textModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('textSelectorModal'));
   const imageModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageSelectorModal'));
 
   function showTextSelector() {
     const container = document.getElementById('textSelector');
     container.innerHTML = '';
+    const texts = textsByType[currentType] || ["No Effect"];
     texts.forEach(txt => {
       const p = document.createElement('p');
       p.textContent = txt;
@@ -189,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createMatrix(matrixEl) {
     const matrixId = matrixEl.dataset.matrix;
+    const type = matrixEl.dataset.type;
     matrixEl.innerHTML = '';
 
     for (let r = 1; r <= 4; r++) {
@@ -197,8 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.classList.add('clickable');
         div.dataset.cellId = cellId;
-        div.style.width = "40px";
-        div.style.height = "40px";
 
         const imgFile = defaultCells[matrixId]?.[cellId] || "Null.png";
         div.style.backgroundImage = `url('./Image/Equipment/Base/${imgFile}')`;
@@ -208,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         div.addEventListener('click', () => {
           currentCell = div;
+          currentType = type;
           const container = document.getElementById('imageSelector');
           container.innerHTML = '';
           images.forEach(imgName => {
@@ -236,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cellId = cell.dataset.cellId;
         if (data[cellId]) {
           const imgFile = data[cellId].image || "Null.png";
-          const txt = data[cellId].text || `ช่อง ${cellId}`;
+          const txt = data[cellId].text || `No Effect`;
           cell.dataset.bgfile = imgFile;
           cell.style.backgroundImage = `url('./Image/Equipment/Base/${imgFile}')`;
           cell.setAttribute('title', txt);
